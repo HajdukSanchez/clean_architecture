@@ -2,36 +2,34 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:clean_architecture/core/usecases/usecase.dart';
 import 'package:clean_architecture/features/number_trivia/domain/repositories/number_trivia_repository.dart';
-import 'package:clean_architecture/features/number_trivia/domain/usecases/get_number_trivia.dart';
+import 'package:clean_architecture/features/number_trivia/domain/usecases/get_random_number_trivia.dart';
 import 'package:clean_architecture/features/number_trivia/domain/entities/number_trivia.dart';
 
 class MockNumberTriviaRepository extends Mock implements NumberTriviaRepository {}
 
 void main() {
-  late GetNumberTrivia usecase;
+  late GetRandomNumberTrivia usecase;
   late MockNumberTriviaRepository mockNumberTriviaRepository;
 
-  const int testNumber = 1;
-  const NumberTrivia testNumberTrivia = NumberTrivia(text: "test", number: testNumber);
+  const NumberTrivia testNumberTrivia = NumberTrivia(text: "test", number: 1);
 
   setUp(() {
     mockNumberTriviaRepository = MockNumberTriviaRepository();
-    usecase = GetNumberTrivia(mockNumberTriviaRepository);
+    usecase = GetRandomNumberTrivia(mockNumberTriviaRepository);
   });
 
-  test("Should get trivia for the number from the repository", () async {
+  test("Should get random trivia from the repository", () async {
     // Arrange
-    // When we call this function, it will return what we tell it to return.
-    when(() => mockNumberTriviaRepository.getNumberTrivia(testNumber))
+    when(() => mockNumberTriviaRepository.getRandomNumberTrivia())
         .thenAnswer((_) async => const Right(testNumberTrivia));
     // Act
-    // This one is the fuction to test.
-    final result = await usecase(const Params(number: testNumber));
+    final result = await usecase(NoParams());
     // Assert
     expect(result, const Right(testNumberTrivia));
     // Verify that the method was called once
-    verify(() => mockNumberTriviaRepository.getNumberTrivia(testNumber));
+    verify(() => mockNumberTriviaRepository.getRandomNumberTrivia());
     // No more interactions with the mock
     verifyNoMoreInteractions(mockNumberTriviaRepository);
   });
