@@ -34,12 +34,12 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
 
   /// This method handle the numberTrivia event by user and emnit states depending on responses.
   void _onGetNumberTriviaEvent(
-      GetTriviaForConcreteNumberEvent event, Emitter<NumberTriviaState> emit) {
+      GetTriviaForConcreteNumberEvent event, Emitter<NumberTriviaState> emit) async {
     final inputEither = inputConverter.stringToUnsignedInteger(event.numberString);
     // Get data and decide to emit error or success state
-    inputEither
-        .fold((failure) => emit(const NumberTriviaErrorState(message: invalidInputFailureMessage)),
-            (integer) async {
+    await inputEither.fold((failure) {
+      emit(const NumberTriviaErrorState(message: invalidInputFailureMessage));
+    }, (integer) async {
       // Emit loading state
       emit(NumberTriviaLoadingState());
       final failureOrTrivia = await getNumberTrivia(Params(number: integer));

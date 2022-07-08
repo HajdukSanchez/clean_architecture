@@ -13,6 +13,7 @@ import 'package:clean_architecture/features/number_trivia/data/datasources/numbe
 class MockHttpClient extends Mock implements http.Client {}
 
 void main() {
+  const int testNumber = 1;
   const String jsonFileName = "trivia.json";
   final testNumberTriviaModel = NumberTriviaModel.fromJson(json.decode(fixture(jsonFileName)));
 
@@ -25,14 +26,22 @@ void main() {
   });
 
   void mockSetUpHttpClientSuccess200(String urlParam) {
-    when(() => mockHttpClient
-            .get(Uri(path: "$baseUrl/$urlParam"), headers: {"Content-Type": "application/json"}))
+    when(() => mockHttpClient.get(
+            Uri.http(
+              baseUrl,
+              urlParam,
+            ),
+            headers: {"Content-Type": "application/json"}))
         .thenAnswer((_) async => http.Response(fixture(jsonFileName), 200));
   }
 
   void mockSetUpHttpClientFailure404(String urlParam) {
-    when(() => mockHttpClient
-            .get(Uri(path: "$baseUrl/$urlParam"), headers: {"Content-Type": "application/json"}))
+    when(() => mockHttpClient.get(
+            Uri.http(
+              baseUrl,
+              urlParam,
+            ),
+            headers: {"Content-Type": "application/json"}))
         .thenAnswer((_) async => http.Response("Something went wrong", 404));
   }
 
@@ -46,8 +55,15 @@ void main() {
       // act
       dataSource.getNumberTrivia(testNumber);
       // assert
-      verify(() => mockHttpClient
-          .get(Uri(path: "$baseUrl/$urlParam"), headers: {"Content-Type": "application/json"}));
+      verify(
+        () => mockHttpClient.get(
+          Uri.http(
+            baseUrl,
+            urlParam,
+          ),
+          headers: {"Content-Type": "application/json"},
+        ),
+      );
     });
 
     test('Should return a NumberTrivia when response code is 200', () async {
@@ -79,8 +95,15 @@ void main() {
       // act
       dataSource.getRandomNumberTrivia();
       // assert
-      verify(() => mockHttpClient
-          .get(Uri(path: "$baseUrl/$urlParam"), headers: {"Content-Type": "application/json"}));
+      verify(
+        () => mockHttpClient.get(
+          Uri.http(
+            baseUrl,
+            urlParam,
+          ),
+          headers: {"Content-Type": "application/json"},
+        ),
+      );
     });
 
     test('Should return a NumberTrivia when response code is 200', () async {

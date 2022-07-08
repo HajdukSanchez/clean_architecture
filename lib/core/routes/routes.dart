@@ -6,5 +6,5 @@ enum PageName { numberTrivia }
 
 /// Routes of each page of the application.
 Map<String, Widget Function(BuildContext)> routes = {
-  PageName.numberTrivia.name: (_) => const NumberTriviaPage(),
+  PageName.numberTrivia.name: (_) => NumberTriviaPage(),
 };

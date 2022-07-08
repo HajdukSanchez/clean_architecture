@@ -17,8 +17,7 @@ abstract class NumberTriviaRemoteDataSource {
   Future<NumberTriviaModel> getRandomNumberTrivia();
 }
 
-const int testNumber = 1;
-const baseUrl = "http://numbersapi.com";
+const baseUrl = "numbersapi.com";
 
 class NumberTriviaRemoteDataSourceImpl implements NumberTriviaRemoteDataSource {
   final http.Client client;
@@ -27,12 +26,22 @@ class NumberTriviaRemoteDataSourceImpl implements NumberTriviaRemoteDataSource {
 
   @override
   Future<NumberTriviaModel> getNumberTrivia(int number) {
-    return _getNumberTriviaFromUrl(Uri(path: "$baseUrl/$testNumber"));
+    return _getNumberTriviaFromUrl(
+      Uri.http(
+        baseUrl,
+        "$number",
+      ),
+    );
   }
 
   @override
   Future<NumberTriviaModel> getRandomNumberTrivia() {
-    return _getNumberTriviaFromUrl(Uri(path: "$baseUrl/random"));
+    return _getNumberTriviaFromUrl(
+      Uri.http(
+        baseUrl,
+        "random",
+      ),
+    );
   }
 
   Future<NumberTriviaModel> _getNumberTriviaFromUrl(Uri url) async {
